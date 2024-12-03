@@ -1,0 +1,60 @@
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+
+def draw_bpmn_diagram():
+    # Initialize figure
+    fig, ax = plt.subplots(figsize=(12, 6))
+    ax.set_xlim(0, 10)
+    ax.set_ylim(0, 6)
+    ax.axis('off')
+
+    # Add nodes
+    def draw_box(x, y, text, color="lightblue"):
+        rect = patches.Rectangle((x, y), 2, 1, linewidth=1, edgecolor='black', facecolor=color)
+        ax.add_patch(rect)
+        ax.text(x + 1, y + 0.5, text, ha='center', va='center', fontsize=10, wrap=True)
+
+    def draw_diamond(x, y, text):
+        diamond = patches.Polygon([(x+1, y+1), (x+2, y+0.5), (x+1, y), (x, y+0.5)], closed=True,
+                                   linewidth=1, edgecolor='black', facecolor='lightgoldenrodyellow')
+        ax.add_patch(diamond)
+        ax.text(x + 1, y + 0.5, text, ha='center', va='center', fontsize=10, wrap=True)
+
+    def draw_circle(x, y, text, color="lightgreen"):
+        circle = patches.Circle((x+1, y+0.5), 0.5, linewidth=1, edgecolor='black', facecolor=color)
+        ax.add_patch(circle)
+        ax.text(x + 1, y + 0.5, text, ha='center', va='center', fontsize=10, wrap=True)
+
+    # Draw Start
+    draw_circle(0, 4, "Start")
+
+    # Draw Process Boxes
+    draw_box(2, 4, "Check Contracts")
+    draw_diamond(4, 4, "Contracts Valid?")
+    draw_box(6, 5, "Update Schedule")
+    draw_box(6, 3, "Sign Contract")
+    draw_box(8, 3, "Add Movie")
+    draw_box(8, 5, "Update Website")
+
+    # Draw End
+    draw_circle(10, 5, "End")
+
+    # Add arrows
+    def draw_arrow(start, end, text=None):
+        ax.annotate('', xy=end, xytext=start,
+                    arrowprops=dict(facecolor='black', arrowstyle='->'))
+        if text:
+            ax.text((start[0] + end[0]) / 2, (start[1] + end[1]) / 2, text, ha='center', fontsize=9)
+
+    # Connections
+    draw_arrow((1, 4.5), (2, 4.5))
+    draw_arrow((4, 4.5), (6, 5.5), "Yes")
+    draw_arrow((4, 4.5), (6, 3.5), "No")
+    draw_arrow((7.5, 3.5), (8, 5.5))
+    draw_arrow((7.5, 5.5), (10, 5.5))
+
+    # Show the diagram
+    plt.show()
+
+# Call the function to draw the diagram
+draw_bpmn_diagram()
